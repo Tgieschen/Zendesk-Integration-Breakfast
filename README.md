@@ -60,5 +60,15 @@ Your end customer should look like this:
 
 <img src='https://assets-5080.twil.io/user%2520settings.png'/>
 
+### 5. Signup for Sendgrid and verify 
+
+First signup for a free Sendgrid account [here](https://signup.sendgrid.com/). 
+
+Once you've singed up we need to verify an email address you can use to send emails, follow the instructions [here](https://sendgrid.com/docs/ui/sending-email/sender-verification/) to add a verified email address.
+
+Finally we need to get an API key in order to use sendgrid. Go ahead and create a `Full Access` api key, steps can he found [here](https://sendgrid.com/docs/ui/account-and-settings/api-keys/#creating-an-api-key). Make sure to write down your API key for now, as you cannot see this code again and will need to create a new key if lost.
+
+
+
 
 
