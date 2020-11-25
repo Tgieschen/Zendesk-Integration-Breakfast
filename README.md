@@ -60,7 +60,11 @@ Your end customer should look like this:
 
 <img src='https://assets-5080.twil.io/user%2520settings.png'/>
 
-### 5. Signup for Sendgrid and verify 
+### 5. Create Zendesk API credentials
+
+In order for Twilio Functions to communicate with Zendesk it has to bee autorized to do so by Zendesk through an API token.You can follow along this [guide](https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-) in order to get an access token.  Make sure to write down your API token for now, as you cannot see this token again and will need to create a new token if lost.
+
+### 6. Signup for Sendgrid and verify 
 
 First signup for a free Sendgrid account [here](https://signup.sendgrid.com/). 
 
@@ -68,6 +72,41 @@ Once you've singed up we need to verify an email address you can use to send ema
 
 Finally we need to get an API key in order to use sendgrid. Go ahead and create a `Full Access` api key, steps can he found [here](https://sendgrid.com/docs/ui/account-and-settings/api-keys/#creating-an-api-key). Make sure to write down your API key for now, as you cannot see this code again and will need to create a new key if lost.
 
+### 7. Upload Twilio Functions
+
+We will be using the Twilio CLI to deploy our Twilio Functions to our account (as described [here](https://www.twilio.com/blog/the-new-way-to-create-develop-and-deploy-twilio-functions)). Before we do this we need to setup our enviornment variables in a new `ZendeskFunctions/.env` file in the the `/ZendeskFunctions` directory, similarly to the `ZendeskFunctions/.example.env` file. 
+
+The variables are: 
+
+| Env Name  | Description |
+| ------------- | ------------- |
+| ACCOUNT_SID | Your account SID, which you can find on the [dashboard](https://www.twilio.com/console) of your Twilio account  |
+| AUTH_TOKEN |  Your Authentication Token, which you can find on the [dashboard](https://www.twilio.com/console) of your Twilio account  |
+| ZENDESK_USERNAME |  The email address you use to log into your Zendesk instance |
+| ZENDESK_TOKEN | the API token you created in Step 5  |
+| ZENDESK_URI | The subdomain you created in Step 2, with an additional path. in the end it should look as follows: `https://<your subdomain name>.zendesk.com/api/v2`  |
+
+With that we can now deploy our functions. First make sure you are logged into the right account. Either run `twilio login` if you haven't logged into the account before or run `twilio profiles:list` and make sure if your active account is the account you want to use. If you are not using the right account you can switch account by running `twilio profiles:use <your profile name>`.
+
+Next make sure you're in the `/ZendeskFunctions` folder and run `twilio serverless:deploy`. Now you're Functions should be uploaded to your account!
+
+
+### 8. Setup Studio Flow
+
+We will be importing the JSON version of the Studio flow from the `StudioFlow.json` file as described [here](https://www.twilio.com/docs/studio/user-guide#importing-and-exporting-flows). Once you have imported the studio flow there are 3 widgets that need to be updated:
+
+
+| Widget Name  | Description |
+| ------------- | ------------- |
+| getUserInfoFunc | The function to be used isn't set yet. make sure the widget is pointing at your `/fetchUserInfo` function of the `ZendeskFunctions` Service  |
+| CreateTicketFunc | The function to be used isn't set yet. make sure the widget is pointing at your `/createTicket` function of the `ZendeskFunctions` Service  |
+| SendCustomerToAgent |  The Workflow and channel aren't set. Set this to `Assign to Anyone` for the workflow and `SMS` for the channel|
+
+It should be noted that the flow is hardcoded however this can be implemented using [Autopilot](https://www.twilio.com/autopilot) and is supposed to represent what a flow using Autopilot could look like. 
+
+### 9. Connect a number to you Studio Flow
+
+Similar to [here](https://www.twilio.com/docs/studio/tutorials/how-to-forward-calls#connect-the-flow-to-a-number) we will now connect a number in your account ( which you can find [here](https://www.twilio.com/console/phone-numbers/incoming)) with your Studio flow. Unlike in the documentation, make sure to not connect your number to the studio flow for incoming calls but for incoming messages.
 
 
 
