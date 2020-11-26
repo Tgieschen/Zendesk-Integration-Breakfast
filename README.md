@@ -85,6 +85,9 @@ The variables are:
 | ZENDESK_USERNAME |  The email address you use to log into your Zendesk instance |
 | ZENDESK_TOKEN | the API token you created in Step 5  |
 | ZENDESK_URI | The subdomain you created in Step 2, with an additional path. in the end it should look as follows: `https://<your subdomain name>.zendesk.com/api/v2`  |
+| ORDER_TIME | The time the chatbot will say the customer made their last order. (In the studio flow this will be mentioned in the `GreetingMsg` widget)|
+| COMPANY_NAME | The name of the company your chatbot will use for greeting the customer. (In the studio flow this will be mentioned in the `GreetingMsg` widget)|
+
 
 With that we can now deploy our functions. First make sure you are logged into the right account. Either run `twilio login` if you haven't logged into the account before or run `twilio profiles:list` and make sure if your active account is the account you want to use. If you are not using the right account you can switch account by running `twilio profiles:use <your profile name>`.
 
@@ -98,7 +101,7 @@ We will be importing the JSON version of the Studio flow from the `StudioFlow.js
 
 | Widget Name  | Description |
 | ------------- | ------------- |
-| getUserInfoFunc | The function to be used isn't set yet. make sure the widget is pointing at your `/fetchUserInfo` function of the `ZendeskFunctions` Service  |
+| getContextInfoFunc | The function to be used isn't set yet. make sure the widget is pointing at your `/fetchContextInfo` function of the `ZendeskFunctions` Service  |
 | CreateTicketFunc | The function to be used isn't set yet. make sure the widget is pointing at your `/createTicket` function of the `ZendeskFunctions` Service  |
 | SendCustomerToAgent |  The Workflow and channel aren't set. Set this to `Assign to Anyone` for the workflow and `SMS` for the channel|
 
@@ -107,6 +110,11 @@ It should be noted that the flow is hardcoded however this can be implemented us
 ### 9. Connect a number to you Studio Flow
 
 Similar to [here](https://www.twilio.com/docs/studio/tutorials/how-to-forward-calls#connect-the-flow-to-a-number) we will now connect a number in your account ( which you can find [here](https://www.twilio.com/console/phone-numbers/incoming)) with your Studio flow. Unlike in the documentation, make sure to not connect your number to the studio flow for incoming calls but for incoming messages.
+
+
+At this point you should be all set. log into your Zendesk account, open the flex plugin in Zendesk and mark yourself as online. Next send an SMS to the phone number you linked with the studio flow from Step 9. You should be guided through a few messages asking about the issue you are facing and then be asked to connect to an agent. When you reply you will be connected to the agent in the Flex Plugin in Zendek and once the agent accepts the task you will see a screenpop. You sould also be able to make 
+
+## Resources
 
 
 
