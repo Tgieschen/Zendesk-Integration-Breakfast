@@ -1,0 +1,339 @@
+{
+  "description": "Bot flow for creating a Flex messaging task",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "next": "SetUserNumber",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -470,
+          "y": -870
+        }
+      }
+    },
+    {
+      "name": "SendCustomerToAgent",
+      "type": "send-to-flex",
+      "transitions": [
+        {
+          "event": "callComplete"
+        },
+        {
+          "event": "failedToEnqueue"
+        },
+        {
+          "event": "callFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -430,
+          "y": 2070
+        },
+        "attributes": "{\"zd_ticket_id\":\"{{flow.variables.ticketId}}\",\"zdCustomTags\":\"[VIP customer]\",\"name\": \"Dave Smith\", \"channelType\": \"{{trigger.message.ChannelAttributes.channel_type}}\", \"channelSid\": \"{{trigger.message.ChannelSid}}\"}"
+      }
+    },
+    {
+      "name": "GreetingMsg",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "IssueMsg",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -410,
+          "y": 150
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Welcome back to Amazing Mattresses, {{flow.variables.userName}}!\nWe see your most recent order was on the 1st Oct 2020. Are you contacting us about this order?",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "ReasonMsg",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "SetTicketInfo",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -420,
+          "y": 610
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Could you tell us the reason why you want to return your order?",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "SetUserInfo",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "GreetingMsg",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.getUserInfoFunc.parsed.user}}",
+            "key": "userId"
+          },
+          {
+            "value": "{{widgets.getUserInfoFunc.parsed.userName}}",
+            "key": "userName"
+          }
+        ],
+        "offset": {
+          "x": -420,
+          "y": -110
+        }
+      }
+    },
+    {
+      "name": "SetUserNumber",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "getUserInfoFunc",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{trigger.message.ChannelAttributes.from}}",
+            "key": "from"
+          }
+        ],
+        "offset": {
+          "x": -420,
+          "y": -620
+        }
+      }
+    },
+    {
+      "name": "SetTicketId",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "ConfirmTicketMsg",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.CreateTicketFunc.parsed.ticketId}}",
+            "key": "ticketId"
+          }
+        ],
+        "offset": {
+          "x": -430,
+          "y": 1360
+        }
+      }
+    },
+    {
+      "name": "EscalateAgentMsg",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "SendCustomerToAgent",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -430,
+          "y": 1830
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Great, we're connecting you to an agent now..."
+      }
+    },
+    {
+      "name": "ConfirmTicketMsg",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "EscalateAgentMsg",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -430,
+          "y": 1600
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Great we've opened a new ticket({{flow.variables.ticketId}}) for \"{{flow.variables.ticketSubject}}\". Would you like to be connected to an agent?",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "IssueMsg",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "ReasonMsg",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -420,
+          "y": 380
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Sorry to hear you are having issues. Could you tell us what you're contacting us about?",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "SetTicketInfo",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "CreateTicketFunc",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.IssueMsg.inbound.Body}}",
+            "key": "ticketSubject"
+          },
+          {
+            "value": "{{widgets.ReasonMsg.inbound.Body}}",
+            "key": "ticketComment"
+          }
+        ],
+        "offset": {
+          "x": -420,
+          "y": 850
+        }
+      }
+    },
+    {
+      "name": "getUserInfoFunc",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "SetUserInfo",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -420,
+          "y": -360
+        },
+        "parameters": [
+          {
+            "value": "{{flow.variables.from}}",
+            "key": "From"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreateTicketFunc",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "SetTicketId",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -430,
+          "y": 1100
+        },
+        "parameters": [
+          {
+            "value": "{{flow.variables.userId}}",
+            "key": "user"
+          },
+          {
+            "value": "{{flow.variables.ticketSubject}}",
+            "key": "subject"
+          },
+          {
+            "value": "{{flow.variables.ticketComment}}",
+            "key": "comment"
+          }
+        ]
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}

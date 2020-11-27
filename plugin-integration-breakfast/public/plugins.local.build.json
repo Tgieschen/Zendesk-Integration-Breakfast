@@ -1,0 +1,13 @@
+[
+  {
+    "name": "IntegrationBreakfastPlugin",
+    "version": "0.0.0",
+    "class": "IntegrationBreakfastPlugin",
+    "requires": [
+      {
+        "@twilio/flex-ui": "^1"
+      }
+    ],
+    "src": "http://127.0.0.1:8085"
+  }
+]
