@@ -82,12 +82,17 @@ The variables are:
 | ------------- | ------------- |
 | ACCOUNT_SID | Your account SID, which you can find on the [dashboard](https://www.twilio.com/console) of your Twilio account  |
 | AUTH_TOKEN |  Your Authentication Token, which you can find on the [dashboard](https://www.twilio.com/console) of your Twilio account  |
+| WORKSPACE | The workspace Sid used to create the follow up task at the end of the demo. Just use the default `Flex Task Assignment` workspace. It can be found[here](https://www.twilio.com/console/taskrouter/dashboard) |
+| WORKFLOW | The workflow Sid used to create the follow up task at the end of the demo. Just use the default `Assign to Anyone` workflow. It can be found[here](https://www.twilio.com/console/taskrouter/dashboard), clicking on the `Flex Task Assignment` workspace and clicking on the Workflows menu item.|
+| TASKCHANNEL |   The taskchannel Sid used to create the follow up task at the end of the demo. Just use the default `Default` taskchannel. It can be found[here](https://www.twilio.com/console/taskrouter/dashboard), clicking on the `Flex Task Assignment` workspace and clicking on the TaskChannels menu item. |
 | ZENDESK_USERNAME |  The email address you use to log into your Zendesk instance |
 | ZENDESK_TOKEN | the API token you created in Step 5  |
 | ZENDESK_URI | The subdomain you created in Step 2, with an additional path. in the end it should look as follows: `https://<your subdomain name>.zendesk.com/api/v2`  |
-| ORDER_TIME | The time the chatbot will say the customer made their last order. (In the studio flow this will be mentioned in the `GreetingMsg` widget)|
+|COMPANY_EMAIL_ADDRESS|The email address you will use to send the email to your customer. This needs to match the email address you approved in Step 6.|
 | COMPANY_NAME | The name of the company your chatbot will use for greeting the customer. (In the studio flow this will be mentioned in the `GreetingMsg` widget)|
+| ORDER_TIME | The time the chatbot will say the customer made their last order. (In the studio flow this will be mentioned in the `GreetingMsg` widget)|
 
+You also need to update the follow up email the customer received at the end or his return request to match your demo story. you can find this in `ZendeskFunctions/functions/sendFollowUp.js`.
 
 With that we can now deploy our functions. First make sure you are logged into the right account. Either run `twilio login` if you haven't logged into the account before or run `twilio profiles:list` and make sure if your active account is the account you want to use. If you are not using the right account you can switch account by running `twilio profiles:use <your profile name>`.
 
@@ -111,8 +116,30 @@ It should be noted that the flow is hardcoded however this can be implemented us
 
 Similar to [here](https://www.twilio.com/docs/studio/tutorials/how-to-forward-calls#connect-the-flow-to-a-number) we will now connect a number in your account ( which you can find [here](https://www.twilio.com/console/phone-numbers/incoming)) with your Studio flow. Unlike in the documentation, make sure to not connect your number to the studio flow for incoming calls but for incoming messages.
 
+### 10. Setup Flex Plugin
+
+We will need to upload a plugin for Flex similar to the Function from Step 7.
+
+First we need to setup the `/plugin-integrationbreafkast/.env` file (`/plugin-integrationbreafkast/.example.env` is an example of what the file should look like). 
+
+
+| Env Name  | Description |
+| ------------- | ------------- |
+| REACT_APP_API_URI | The base url of your Twilio Functions which were deployed in step 7 (`https://<Your Twilio Functions URL>.twil.io`)  |
+|REACT_APP_ACCOUNT_SID| Your AccountSid found in your Twilio Dashboard|
+
+Make sure you're logged in to the correct account in the CLI jsut like in Step 7 and that you're in the `/plugin-integrationbreafkast` folder.
+
+Run the following commands:
+
+1. `npm i`
+2. `npm run build`
+3. `twilio flex:plugins:deploy`
+
+After this your plugin should be deployed to your Twilio Flex instance.
 
 At this point you should be all set. log into your Zendesk account, open the flex plugin in Zendesk and mark yourself as online. Next send an SMS to the phone number you linked with the studio flow from Step 9. You should be guided through a few messages asking about the issue you are facing and then be asked to connect to an agent. When you reply you will be connected to the agent in the Flex Plugin in Zendek and once the agent accepts the task you will see a screenpop. You sould also be able to make 
+
 
 ## Resources
 
