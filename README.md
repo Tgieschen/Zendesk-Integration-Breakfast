@@ -138,7 +138,7 @@ Run the following commands:
 
 After this your plugin should be deployed to your Twilio Flex instance.
 
-At this point you should be all set. log into your Zendesk account, open the flex plugin in Zendesk and mark yourself as online. Next send an SMS to the phone number you linked with the studio flow from Step 9. You should be guided through a few messages asking about the issue you are facing and then be asked to connect to an agent. When you reply you will be connected to the agent in the Flex Plugin in Zendek and once the agent accepts the task you will see a screenpop. You sould also be able to make 
+At this point you should be all set. log into your Zendesk account, open the flex plugin in Zendesk and mark yourself as online. Next send an SMS to the phone number you linked with the studio flow from Step 9 from the phone number of the customer that you defined in Step 4. You should be guided through a few messages asking about the issue you are facing and then be asked to connect to an agent. When you reply you will be connected to the agent in the Flex Plugin in Zendek and once the agent accepts the task you will see a screenpop. You sould also be able to make 
 
 
 ## Resources
