@@ -52,6 +52,7 @@ Now we can create our end user. Create a new enduser (how to [here](https://supp
 
 | Field Name  | Description |
 | ------------- | ------------- |
+|Primary email| The email address where the customer will receive their return order confirmation email |
 |  Phone | needs to be the phone number you will use in the demo for your customer. Has to be in [E.164](https://www.twilio.com/docs/glossary/what-e164) format|
 | Birthday  | any date is fine; used for identity verification in the demo  |
 | Identification Code  | any number is fine; used for identity verification in the demo  |
@@ -64,7 +65,7 @@ Your end customer should look like this:
 
 In order for Twilio Functions to communicate with Zendesk it has to bee autorized to do so by Zendesk through an API token.You can follow along this [guide](https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-) in order to get an access token.  Make sure to write down your API token for now, as you cannot see this token again and will need to create a new token if lost.
 
-### 6. Signup for Sendgrid and verify 
+### 6. Signup for Sendgrid and verify "company" email address
 
 First signup for a free Sendgrid account [here](https://signup.sendgrid.com/). 
 
@@ -92,7 +93,7 @@ The variables are:
 | COMPANY_NAME | The name of the company your chatbot will use for greeting the customer. (In the studio flow this will be mentioned in the `GreetingMsg` widget)|
 | ORDER_TIME | The time the chatbot will say the customer made their last order. (In the studio flow this will be mentioned in the `GreetingMsg` widget)|
 
-You also need to update the follow up email the customer received at the end or his return request to match your demo story. you can find this in `ZendeskFunctions/functions/sendFollowUp.js`.
+You also need to update the follow up email the customer received at the end of his return request to match your demo story. you can find this in `ZendeskFunctions/functions/sendFollowUp.js`.
 
 With that we can now deploy our functions. First make sure you are logged into the right account. Either run `twilio login` if you haven't logged into the account before or run `twilio profiles:list` and make sure if your active account is the account you want to use. If you are not using the right account you can switch account by running `twilio profiles:use <your profile name>`.
 
@@ -118,7 +119,7 @@ Similar to [here](https://www.twilio.com/docs/studio/tutorials/how-to-forward-ca
 
 ### 10. Setup Flex Plugin
 
-We will need to upload a plugin for Flex similar to the Function from Step 7.
+We will need to upload a plugin for Flex similar to the Function from Step 7 (generally based on [this](https://www.twilio.com/docs/flex/developer/plugins/cli/deploy-and-release))
 
 First we need to setup the `/plugin-integrationbreafkast/.env` file (`/plugin-integrationbreafkast/.example.env` is an example of what the file should look like). 
 
@@ -142,6 +143,10 @@ At this point you should be all set. log into your Zendesk account, open the fle
 
 
 ## Resources
+
+Video of live integration breakfast:
+
+https://ahoy.twilio.com/emea-integration-breakfast-zendesk-1-ty
 
 
 
